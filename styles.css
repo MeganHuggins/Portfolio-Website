@@ -1163,7 +1163,6 @@ section {
 
 /* Projects Section - Gallery Exhibition Style */
 
-/* Hidden by default */
 .popup-overlay {
   display: none;
   position: fixed;
@@ -1195,7 +1194,7 @@ section {
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* The Photo */
+
 .popup-photo {
   max-width: 150px;
   border-radius: 50%; /* Optional: circle photo */
