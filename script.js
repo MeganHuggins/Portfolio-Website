@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initSmoothScrolling();
     initCreativeAnimations();
-    togglePopup();
 });
 
 // Enhanced Theme Toggle with Smooth Transitions
@@ -250,16 +249,6 @@ function animateSkillBar(skillItem) {
             progressBar.animated = true;
         }, 300);
     }
-}
-
-// Porject PopUp 
-
-function togglePopup() {
-    console.log("first");
-  const overlay = document.getElementById('popupOverlay');
-   console.log("second");
-  overlay.classList.toggle('active');
-   console.log("third");
 }
 
 // Enhanced Contact Form
