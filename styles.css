@@ -28,9 +28,9 @@
 /* Museum-Inspired Color Palette */
 :root {
     /* Light Theme - Museum Whites & Warm Tones */
-    --bg-primary: #fdfcfb;
-    --bg-secondary: #f9f7f4;
-    --bg-accent: #f4f1eb;
+    --bg-primary: #efe8df;
+    --bg-secondary: #d9cec3;
+    --bg-accent: #0f4c5c;
     --bg-card: #ffffff;
     --bg-overlay: rgba(253, 252, 251, 0.95);
     
@@ -40,9 +40,9 @@
     --text-light: #a0a0a0;
     
     /* Museum-Inspired Accents */
-    --accent-primary: #8b6f47;     /* Warm Bronze */
-    --accent-secondary: #6b5b73;   /* Muted Aubergine */
-    --accent-tertiary: #7c8471;    /* Sage Green */
+    --accent-primary: #0f4c5c;;     /* Warm Bronze */
+    --accent-secondary: #c47a4a;   /* Muted Aubergine */
+    --accent-tertiary: #6b5b73;    /* Sage Green */
     --accent-gold: #c19a6b;        /* Museum Gold */
     --accent-navy: #2c3e50;        /* Deep Navy */
     
