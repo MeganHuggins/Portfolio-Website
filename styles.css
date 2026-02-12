@@ -86,9 +86,9 @@
 
 /* Dark Theme - Sophisticated Night Museum */
 [data-theme="dark"] {
-    --bg-primary: #0f0f0f;
-    --bg-secondary: #1a1a1a;
-    --bg-accent: #242424;
+    --bg-primary: #2a1e1b;
+    --bg-secondary: #d9cec3;
+    --bg-accent: #0f4c5c;
     --bg-card: #1e1e1e;
     --bg-overlay: rgba(15, 15, 15, 0.95);
     
@@ -97,9 +97,9 @@
     --text-muted: #9a9a98;
     --text-light: #6a6a68;
     
-    --accent-primary: #d4b896;     /* Warmer Bronze */
+    --accent-primary: #0f4c5c;     /* Warmer Bronze */
     --accent-secondary: #a8a0b8;   /* Lighter Aubergine */
-    --accent-tertiary: #a8b8a0;    /* Lighter Sage */
+    --accent-tertiary: #c47a4a;    /* Lighter Sage */
     --accent-gold: #e8c4a0;        /* Lighter Museum Gold */
     
     --highlight-warm: #1f1d1a;
