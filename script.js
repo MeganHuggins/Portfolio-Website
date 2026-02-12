@@ -255,8 +255,11 @@ function animateSkillBar(skillItem) {
 // Porject PopUp 
 
 function togglePopup() {
+    console.log("first");
   const overlay = document.getElementById('popupOverlay');
+   console.log("second");
   overlay.classList.toggle('active');
+   console.log("third");
 }
 
 // Enhanced Contact Form
