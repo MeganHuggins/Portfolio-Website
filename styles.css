@@ -528,6 +528,7 @@ body {
 }
 
 .role-main {
+    padding-left: var(--space-xs);
     font-size: 1.75rem;
     font-weight: 500;
     color: var(--accent-primary);
