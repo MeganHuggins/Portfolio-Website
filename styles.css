@@ -1396,7 +1396,9 @@ section {
 }
 
 .popup-btn {
-  max-width: 10px;  
+  display: flex;
+  align-self: flex-end;
+  background: transparent;
 }
 
 /* Skills Section - Professional Exhibition */
