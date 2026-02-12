@@ -244,15 +244,18 @@
 
     <!-- Projects Section -->
     <section id="projects" class="projects">
-             <!-- The Trigger Button -->
+            
             <!-- <button onclick="togglePopup()">Open Profile</button> -->
 
             <!-- The Popup Container -->
         <div id="popupOverlay" class="popup-overlay" onclick="togglePopup()">
             <div class="popup-content" onclick="event.stopPropagation()">
+                
+                <!-- The Trigger Button -->
+                <button class="popup-btn" onclick="togglePopup()">Close</button>
                 <!-- Your Photo -->
                 <img src="images/meow-bark.png" alt="Profile" class="popup-photo">
-                <button onclick="togglePopup()">Close</button>
+               
             </div>
         </div>
 
