@@ -9,7 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initSmoothScrolling();
     initCreativeAnimations();
+    togglePopup();
 });
+
+function togglePopup() {
+  const overlay = document.getElementById('popupOverlay');
+  overlay.classList.toggle('active');
+}
+
 
 // Enhanced Theme Toggle with Smooth Transitions
 function initTheme() {
