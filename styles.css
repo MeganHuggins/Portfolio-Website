@@ -1376,11 +1376,11 @@ section {
 
 /* The Popup Box */
 .popup-content {
-  /* background: white;
+  /* background: white; */
   padding: 20px;
   border-radius: 15px;
   text-align: center;
-  max-width: 400px; */
+  max-width: 400px;
   width: 90%;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
