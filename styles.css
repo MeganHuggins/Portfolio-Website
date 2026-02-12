@@ -513,9 +513,9 @@ body {
 
 .role-container {
     position: relative;
-    display: flex;
+    /* display: flex; */
     align-items: baseline;
-    gap: var(--space-xs);
+    /* gap: var(--space-xs); */
     margin-bottom: var(--space-xl);
     font-family: var(--font-serif);
 }
