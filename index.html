@@ -244,19 +244,17 @@
 
     <!-- Projects Section -->
     <section id="projects" class="projects">
-        <div>
              <!-- The Trigger Button -->
-            <button onclick="togglePopup()">Open Profile</button>
+            <!-- <button onclick="togglePopup()">Open Profile</button> -->
 
             <!-- The Popup Container -->
-            <div id="popupOverlay" class="popup-overlay" onclick="togglePopup()">
+        <div id="popupOverlay" class="popup-overlay" onclick="togglePopup()">
             <div class="popup-content" onclick="event.stopPropagation()">
                 <!-- Your Photo -->
-                <img src="your-photo.jpg" alt="Profile" class="popup-photo">
+                <img src="meow-bark.png" alt="Profile" class="popup-photo">
                 <h2>Hello!</h2>
                 <p>This is my photo.</p>
                 <button onclick="togglePopup()">Close</button>
-            </div>
             </div>
         </div>
 
@@ -284,7 +282,7 @@
                                     <i class="fab fa-github"></i>
                                 </a>
                                 <a href="#" class="project-link" title="Live Demo">
-                                    <i class="fas fa-external-link-alt"></i>
+                                    <i onclick="togglePopup()" class="fas fa-external-link-alt"></i>
                                 </a>
                             </div>
                         </div>
