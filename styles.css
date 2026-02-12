@@ -1162,6 +1162,46 @@ section {
 }
 
 /* Projects Section - Gallery Exhibition Style */
+
+/* Hidden by default */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  backdrop-filter: blur(10px); /* THE BLUR EFFECT */
+  -webkit-backdrop-filter: blur(10px); /* Support for Safari */
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Make it active */
+.popup-overlay.active {
+  display: flex;
+}
+
+/* The Popup Box */
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* The Photo */
+.popup-photo {
+  max-width: 150px;
+  border-radius: 50%; /* Optional: circle photo */
+  border: 4px solid #fff;
+}
+
 .projects {
     background: var(--bg-primary);
     position: relative;

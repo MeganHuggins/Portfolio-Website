@@ -267,9 +267,16 @@
                                 <a href="#" class="project-link" title="View Code">
                                     <i class="fab fa-github"></i>
                                 </a>
-                                <a href="#" class="project-link" title="Live Demo">
+                                <a onclick="togglePopup()" href="#" class="project-link" title="Live Demo">
                                     <i class="fas fa-external-link-alt"></i>
                                 </a>
+                                <div id="popupOverlay" class="popup-overlay" onclick="togglePopup()">
+                                    <div class="popup-content" onclick="event.stopPropagation()">
+                                        <!-- Your Photo -->
+                                        <img src="meow-bark.png" alt="Meow Bark Wirefram" class="popup-photo">
+                                        <button onclick="togglePopup()">Close</button>
+                                    </div>
+                                <div>
                             </div>
                         </div>
                     </div>

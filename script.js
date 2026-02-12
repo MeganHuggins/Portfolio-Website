@@ -251,6 +251,13 @@ function animateSkillBar(skillItem) {
     }
 }
 
+// Porject PopUp 
+
+function togglePopup() {
+  const overlay = document.getElementById('popupOverlay');
+  overlay.classList.toggle('active');
+}
+
 // Enhanced Contact Form
 function initContactForm() {
     const contactForm = document.getElementById('contactForm');
