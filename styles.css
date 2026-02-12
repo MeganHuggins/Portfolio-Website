@@ -1387,7 +1387,7 @@ section {
 
 /* The Photo */
 .popup-photo {
-  /* max-width: 150px; */
+  max-width: 80vw;
   border-radius: 50%; /* Optional: circle photo */
   border: 4px solid #fff;
 }
