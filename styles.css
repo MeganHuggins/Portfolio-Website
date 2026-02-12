@@ -1361,6 +1361,7 @@ section {
   left: 0;
   width: 100vw;
   height: 100vh;
+  text-align: center;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
   backdrop-filter: blur(10px); /* THE BLUR EFFECT */
   -webkit-backdrop-filter: blur(10px); /* Support for Safari */
@@ -1380,7 +1381,7 @@ section {
   padding: 20px;
   border-radius: 15px;
   text-align: center;
-  max-width: 400px;
+  max-width: 80vw;
   width: 90%;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
@@ -1388,8 +1389,8 @@ section {
 /* The Photo */
 .popup-photo {
   max-width: 80vw;
-  border-radius: 50%; /* Optional: circle photo */
-  border: 4px solid #fff;
+  padding: 2rem;
+  /* border: 4px solid #fff; */
 }
 
 /* Skills Section - Professional Exhibition */
