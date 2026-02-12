@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initSmoothScrolling();
     initCreativeAnimations();
+    togglePopup();
 });
 
 // Enhanced Theme Toggle with Smooth Transitions
