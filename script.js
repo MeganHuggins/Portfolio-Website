@@ -105,7 +105,7 @@ function closePopup() {
 }
 
 // Event delegation: supports unlimited triggers
-ddocument.addEventListener("click", (e) => {
+document.addEventListener("click", (e) => {
   const trigger = e.target.closest(".popup-trigger");
   if (!trigger) return;
 
