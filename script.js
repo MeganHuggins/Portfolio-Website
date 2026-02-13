@@ -19,6 +19,9 @@ const closeBtn = document.getElementById("closePopupBtn");
 const zoomWrapper = document.getElementById("zoomWrapper");
 const zoomImage = document.getElementById("zoomImage");
 
+const popupContent = document.querySelector(".popup-content");
+const popupLoading = document.getElementById("popupLoading");
+
 const SCALE = 2;
 let isZoomedMobile = false;
 
