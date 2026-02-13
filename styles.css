@@ -1473,14 +1473,6 @@ section {
   }
 }
 
-
-/* .popup-photo {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 12px;
-} */
-
 /* Close button */
 .popup-btn {
   position: absolute;
@@ -1512,6 +1504,67 @@ section {
   outline-offset: 2px;
 }
 
+.carousel-controls {
+  display: none; /* hidden for single-image projects */
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.carousel-controls.is-active {
+  display: flex;
+}
+
+.carousel-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.carousel-btn:hover { background: rgba(0,0,0,0.55); }
+.carousel-btn:focus { outline: 2px solid rgba(182,120,67,0.9); outline-offset: 2px; }
+.carousel-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.carousel-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.carousel-count {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.28);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.carousel-dot.is-active {
+  background: rgba(255,255,255,0.9);
+}
 
 /* Skills Section - Professional Exhibition */
 .skills {

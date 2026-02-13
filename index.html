@@ -245,12 +245,23 @@
         <div id="popupOverlay" class="popup-overlay" aria-hidden="true">
             <div class="popup-content" role="dialog" aria-modal="true" aria-label="Project preview">
                 <button class="popup-btn" id="closePopupBtn" type="button" aria-label="Close popup">×</button>
-                <div class="zoom-wrapper" id="zoomWrapper">
+                <div class="zoom-wrapper" id="zoomWrapper">                 
+                <div class="carousel-controls" id="carouselControls" aria-hidden="true">
+                    <button type="button" class="carousel-btn" id="carouselPrev" aria-label="Previous slide">‹</button>
+                    <div class="carousel-meta">
+                        <span class="carousel-count" id="carouselCount">1 / 1</span>
+                        <div class="carousel-dots" id="carouselDots"></div>
+                    </div>
+
+                    <button type="button" class="carousel-btn" id="carouselNext" aria-label="Next slide">›</button>
+                </div>
                 <img id="zoomImage" class="popup-photo" alt="" />
                 </div>
                 <p class="popup-loading" id="popupLoading">Loading…</p>
             </div>
         </div>
+
+        
 
         <div class="container">
             <div class="section-header">
@@ -368,9 +379,14 @@
                                 <a href="#" class="project-link" title="View Code">
                                     <i class="fab fa-github"></i>
                                 </a>
-                                <a href="#" class="project-link" title="App Store">
-                                    <i class="fas fa-mobile-alt"></i>
-                                </a>
+                                <button
+                                    type="button"
+                                    class="project-link popup-trigger"
+                                    data-popup-alt="Wireframe sections"
+                                    data-carousel="/images/carousel/B&A1.png|/images/carousel/B&A2.png| /images/carousel/FAQ.png| /images/carousel/Q&A.png"
+                                    >
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
