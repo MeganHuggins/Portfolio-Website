@@ -1404,9 +1404,14 @@ section {
 
 /* Image */
 .zoom-wrapper {
-  overflow: hidden;      /* hides overflow when image scales */
+  overflow: hidden;
   border-radius: 12px;
   cursor: zoom-in;
+  touch-action: manipulation; /* reduces double-tap zoom oddities */
+}
+
+.zoom-wrapper.is-zoomed {
+  cursor: zoom-out;
 }
 
 .popup-photo {
@@ -1414,9 +1419,19 @@ section {
   height: auto;
   display: block;
 
-  transition: transform 0.15s ease-out;
-  transform-origin: center center;
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition: transform 140ms ease-out;
+  will-change: transform;
 }
+
+/* Optional: when zoomed on mobile, you might want a slightly slower ease */
+@media (hover: none) and (pointer: coarse) {
+  .popup-photo {
+    transition: transform 160ms ease-out;
+  }
+}
+
 
 /* .popup-photo {
   width: 100%;

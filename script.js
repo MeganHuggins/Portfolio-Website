@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
 const overlay = document.getElementById("popupOverlay");
 const openBtn = document.getElementById("openPopupBtn");
 const closeBtn = document.getElementById("closePopupBtn");
+const zoomWrapper = document.getElementById("zoomWrapper");
 const zoomImage = document.getElementById("zoomImage");
-const zoomWrapper = document.querySelector(".zoom-wrapper");
 
 let scaleAmount = 2; // how strong the zoom is
 
@@ -54,20 +54,66 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-zoomWrapper.addEventListener("mousemove", (e) => {
+const SCALE = 2; // change to 1.6–2.5 depending on your image detail
+let isZoomedMobile = false;
+
+// Detect interaction capabilities
+const canHover = window.matchMedia("(hover: hover)").matches;
+const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+
+// Helper to set zoom origin from an event
+function setOriginFromEvent(e) {
   const rect = zoomWrapper.getBoundingClientRect();
 
-  // Cursor position inside element (0–1 range)
-  const x = (e.clientX - rect.left) / rect.width;
-  const y = (e.clientY - rect.top) / rect.height;
+  // Support mouse + touch
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  const x = (clientX - rect.left) / rect.width;
+  const y = (clientY - rect.top) / rect.height;
 
   zoomImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
-  zoomImage.style.transform = `scale(${scaleAmount})`;
-});
+}
 
-zoomWrapper.addEventListener("mouseleave", () => {
-  zoomImage.style.transform = "scale(1)";
-});
+// =======================
+// Desktop: hover-to-zoom
+// =======================
+if (canHover && !isCoarsePointer) {
+  zoomWrapper.addEventListener("mousemove", (e) => {
+    setOriginFromEvent(e);
+    zoomImage.style.transform = `scale(${SCALE})`;
+    zoomWrapper.classList.add("is-zoomed");
+  });
+
+  zoomWrapper.addEventListener("mouseleave", () => {
+    zoomImage.style.transform = "scale(1)";
+    zoomWrapper.classList.remove("is-zoomed");
+  });
+}
+
+// =======================
+// Mobile: tap-to-toggle
+// =======================
+if (!canHover || isCoarsePointer) {
+  zoomWrapper.addEventListener("click", (e) => {
+    // Toggle zoom state
+    isZoomedMobile = !isZoomedMobile;
+
+    if (isZoomedMobile) {
+      setOriginFromEvent(e);
+      zoomImage.style.transform = `scale(${SCALE})`;
+      zoomWrapper.classList.add("is-zoomed");
+
+      // Optional: prevent background page from scrolling while zoomed
+      // (only if you want; comment out if annoying)
+      // document.body.style.overflow = "hidden";
+    } else {
+      zoomImage.style.transform = "scale(1)";
+      zoomWrapper.classList.remove("is-zoomed");
+      // document.body.style.overflow = "";
+    }
+  });
+}
 
 
 // Enhanced Theme Toggle with Smooth Transitions
