@@ -13,178 +13,191 @@ document.addEventListener('DOMContentLoaded', function() {
 
 console.count("popup script loaded");
 
-const overlay = document.getElementById("popupOverlay");
-const closeBtn = document.getElementById("closePopupBtn");
+document.addEventListener("DOMContentLoaded", () => {
+  // --- Grab DOM elements (safe after DOMContentLoaded) ---
+  const overlay = document.getElementById("popupOverlay");
+  const closeBtn = document.getElementById("closePopupBtn");
 
-const zoomWrapper = document.getElementById("zoomWrapper");
-const zoomImage = document.getElementById("zoomImage");
-console.log(zoomImage, "zoomImage")
+  const zoomWrapper = document.getElementById("zoomWrapper");
+  const zoomImage = document.getElementById("zoomImage");
 
-const popupContent = document.querySelector(".popup-content");
-const popupLoading = document.getElementById("popupLoading");
+  const popupContent = document.querySelector(".popup-content");
+  const popupLoading = document.getElementById("popupLoading");
 
-const SCALE = 2;
-let isZoomedMobile = false;
+  // --- Guard: if any required element is missing, stop and log clearly ---
+  const required = { overlay, closeBtn, zoomWrapper, zoomImage, popupContent, popupLoading };
+  const missing = Object.entries(required).filter(([_, el]) => !el).map(([name]) => name);
 
-const canHover = window.matchMedia("(hover: hover)").matches;
-const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-
-function resetZoom() {
-  isZoomedMobile = false;
-  zoomWrapper.classList.remove("is-zoomed");
-  zoomImage.style.transform = "scale(1)";
-  zoomImage.style.transformOrigin = "50% 50%";
-}
-
-async function openPopup(payload = {}) {
-  const imgSrc = payload.imgSrc || "";
-  const imgAlt = payload.imgAlt || "";
-
-  if (!imgSrc) {
-    console.warn("Missing data-popup-img on trigger:", payload);
+  if (missing.length) {
+    console.error("Popup init failed. Missing elements:", missing);
     return;
   }
 
-  // Reset zoom + hide image immediately
-  resetZoom();
-  zoomImage.classList.remove("is-ready");
+  // --- Config ---
+  const SCALE = 2;
+  let isZoomedMobile = false;
 
-  // Optional loading UI
-  popupContent.classList.add("is-loading");
-  if (popupLoading) popupLoading.textContent = "Loading…";
+  const canHover = window.matchMedia("(hover: hover)").matches;
+  const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
-  // IMPORTANT: clear old image to prevent “flash of previous”
-  zoomImage.removeAttribute("src");
-  zoomImage.alt = imgAlt || "";
+  function resetZoom() {
+    isZoomedMobile = false;
+    zoomWrapper.classList.remove("is-zoomed");
+    zoomImage.style.transform = "scale(1)";
+    zoomImage.style.transformOrigin = "50% 50%";
+  }
 
-  // Open the modal now (overlay + box appear instantly)
-  overlay.classList.add("active");
-  overlay.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
+  function setOriginFromEvent(e) {
+    const rect = zoomWrapper.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-  // Preload + decode the next image before swapping it in
-  const preloaded = new Image();
-  preloaded.src = imgSrc;
+    const x = (clientX - rect.left) / rect.width;
+    const y = (clientY - rect.top) / rect.height;
 
-  try {
-    // Wait for image data to load
-    await new Promise((resolve, reject) => {
-      preloaded.onload = resolve;
-      preloaded.onerror = reject;
-    });
+    zoomImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+  }
 
-    // Wait for decode (prevents paint jank in many browsers)
-    if (preloaded.decode) {
-      await preloaded.decode();
+  async function openPopup(payload = {}) {
+    const imgSrc = payload.imgSrc || "";
+    const imgAlt = payload.imgAlt || "";
+
+    if (!imgSrc) {
+      console.warn("openPopup called without imgSrc. Payload:", payload);
+      return;
     }
 
-    // Now swap in the correct image
-    zoomImage.src = imgSrc;
-
-    // Next frame: fade it in
-    requestAnimationFrame(() => zoomImage.classList.add("is-ready"));
-  } catch (err) {
-    // Fallback: show broken state gracefully
-    if (popupLoading) popupLoading.textContent = "Failed to load image.";
-    console.warn("Popup image failed to load:", err);
-  } finally {
-    popupContent.classList.remove("is-loading");
-  }
-}
-
-function closePopup() {
-  overlay.classList.remove("active");
-  overlay.setAttribute("aria-hidden", "true");
-  document.body.style.overflow = "";
-
-  resetZoom();
-
-  // Prevent old image flash next time
-  zoomImage.classList.remove("is-ready");
-  zoomImage.removeAttribute("src");
-}
-
-// Event delegation: supports unlimited triggers
-document.addEventListener("click", (e) => {
-  const trigger = e.target.closest(".popup-trigger");
-  if (!trigger) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const srcEl = trigger.querySelector(".popup-src");
-  const payload = {
-    imgSrc: srcEl ? srcEl.getAttribute("src") : "",
-    imgAlt: trigger.dataset.popupAlt || "",
-  };
-
-  if (!payload.imgSrc) {
-    console.warn("No .popup-src found inside trigger:", trigger);
-    return;
-  }
-
-  const resolved = new URL(payload.imgSrc, document.baseURI).href;
-  console.log("Popup img src:", payload.imgSrc, "→", resolved);
-
-  requestAnimationFrame(() => openPopup(payload));
-});
-
-closeBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  closePopup();
-});
-
-// Click outside popup-content closes
-overlay.addEventListener("click", (e) => {
-  if (e.target === overlay) closePopup();
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && overlay.classList.contains("active")) closePopup();
-});
-
-// --- Zoom behavior ---
-function setOriginFromEvent(e) {
-  const rect = zoomWrapper.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-  const x = (clientX - rect.left) / rect.width;
-  const y = (clientY - rect.top) / rect.height;
-
-  zoomImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
-}
-
-// Desktop: hover zoom
-if (canHover && !isCoarsePointer) {
-  zoomWrapper.addEventListener("mousemove", (e) => {
-    if (!overlay.classList.contains("active")) return;
-    setOriginFromEvent(e);
-    zoomImage.style.transform = `scale(${SCALE})`;
-    zoomWrapper.classList.add("is-zoomed");
-  });
-
-  zoomWrapper.addEventListener("mouseleave", () => {
+    // Reset zoom + prep loading UI
     resetZoom();
+    zoomImage.classList.remove("is-ready");
+    popupContent.classList.add("is-loading");
+    popupLoading.textContent = "Loading…";
+
+    // Clear old image so it can't flash
+    zoomImage.removeAttribute("src");
+    zoomImage.alt = imgAlt;
+
+    // Open modal immediately (feels responsive)
+    overlay.classList.add("active");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    // Preload next image BEFORE showing it
+    const preloaded = new Image();
+    preloaded.src = imgSrc;
+
+    try {
+      await new Promise((resolve, reject) => {
+        preloaded.onload = resolve;
+        preloaded.onerror = reject;
+      });
+
+      // decode is nice-to-have; don't fail if it throws
+      if (preloaded.decode) {
+        try {
+          await preloaded.decode();
+        } catch (e) {
+          console.warn("decode() failed, continuing:", e);
+        }
+      }
+
+      // Swap in the correct image and fade it in
+      zoomImage.src = imgSrc;
+      requestAnimationFrame(() => zoomImage.classList.add("is-ready"));
+    } catch (err) {
+      popupLoading.textContent = "Failed to load image.";
+      console.warn("Popup image failed to load:", err, "src:", imgSrc);
+    } finally {
+      popupContent.classList.remove("is-loading");
+    }
+  }
+
+  function closePopup() {
+    overlay.classList.remove("active");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+
+    resetZoom();
+
+    // Clear image to prevent flash on next open
+    zoomImage.classList.remove("is-ready");
+    zoomImage.removeAttribute("src");
+  }
+
+  // --- Trigger click (event delegation) ---
+  document.addEventListener("click", (e) => {
+    const trigger = e.target.closest(".popup-trigger");
+    if (!trigger) return;
+
+    // IMPORTANT:
+    // If trigger is <a href="#">, prevent it from affecting scroll / smooth-scroll code
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Read from the hidden <img class="popup-src" src="...">
+    const srcEl = trigger.querySelector(".popup-src");
+    const imgSrc = srcEl?.getAttribute("src") || "";
+    const imgAlt = trigger.dataset.popupAlt || "";
+
+    if (!imgSrc) {
+      console.warn("Popup trigger missing .popup-src <img src='...'>:", trigger);
+      return;
+    }
+
+    // Helpful debug
+    try {
+      const resolved = new URL(imgSrc, document.baseURI).href;
+      console.log("Popup img src:", imgSrc, "→", resolved);
+    } catch (_) {
+      console.log("Popup img src:", imgSrc);
+    }
+
+    requestAnimationFrame(() => openPopup({ imgSrc, imgAlt }));
   });
-}
 
-// Mobile: tap toggle zoom
-if (!canHover || isCoarsePointer) {
-  zoomWrapper.addEventListener("click", (e) => {
-    if (!overlay.classList.contains("active")) return;
+  // --- Close behavior ---
+  closeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closePopup();
+  });
 
-    isZoomedMobile = !isZoomedMobile;
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closePopup();
+  });
 
-    if (isZoomedMobile) {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && overlay.classList.contains("active")) closePopup();
+  });
+
+  // --- Zoom behavior ---
+  if (canHover && !isCoarsePointer) {
+    // Desktop hover zoom
+    zoomWrapper.addEventListener("mousemove", (e) => {
+      if (!overlay.classList.contains("active")) return;
       setOriginFromEvent(e);
       zoomImage.style.transform = `scale(${SCALE})`;
       zoomWrapper.classList.add("is-zoomed");
-    } else {
-      resetZoom();
-    }
-  });
-}
+    });
+
+    zoomWrapper.addEventListener("mouseleave", () => resetZoom());
+  } else {
+    // Mobile tap toggle zoom
+    zoomWrapper.addEventListener("click", (e) => {
+      if (!overlay.classList.contains("active")) return;
+
+      isZoomedMobile = !isZoomedMobile;
+
+      if (isZoomedMobile) {
+        setOriginFromEvent(e);
+        zoomImage.style.transform = `scale(${SCALE})`;
+        zoomWrapper.classList.add("is-zoomed");
+      } else {
+        resetZoom();
+      }
+    });
+  }
+});
+
 
 
 // Enhanced Theme Toggle with Smooth Transitions
