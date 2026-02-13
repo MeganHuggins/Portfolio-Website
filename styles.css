@@ -1355,24 +1355,34 @@ section {
 
 /* Overlay hidden by default */
 .popup-overlay {
-  display: none;
   position: fixed;
-  inset: 0; /* shorthand for top/left/right/bottom: 0 */
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+
   background-color: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  z-index: 1000;
 
-  /* center the popup */
-  justify-content: center;
-  align-items: center;
+  /* instead of display:none */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 
-  padding: 24px; /* keeps popup away from screen edges */
+  transition: opacity 140ms ease, visibility 140ms ease;
+  will-change: opacity;
 }
 
 .popup-overlay.active {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
+
 
 /* Popup Box */
 .popup-content {
