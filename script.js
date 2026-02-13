@@ -17,6 +17,11 @@ const overlay = document.getElementById("popupOverlay");
 const openBtn = document.getElementById("openPopupBtn");
 const closeBtn = document.getElementById("closePopupBtn");
 
+window.addEventListener("DOMContentLoaded", () => {
+  const img = new Image();
+  img.src = "images/meow-bark.png";
+});
+
 function openPopup() {
   overlay.classList.add("active");
   overlay.setAttribute("aria-hidden", "false");
