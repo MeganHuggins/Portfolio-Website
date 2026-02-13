@@ -1395,7 +1395,7 @@ section {
 }
 
 .popup-btn{
-  position: absolute;
+  position: sticky;
   top: 0px;
   right: 0px;
   z-index: 10;              /* stays above zoomed image */
@@ -1423,19 +1423,26 @@ section {
 .popup-btn:hover{ background: rgba(0,0,0,0.55); }
 .popup-btn:focus{ outline: 2px solid rgba(182,120,67,0.9); outline-offset: 2px; }
 
-.popup-header{
-  margin-bottom: 14px;
+/* start hidden until loaded */
+.popup-photo {
+  opacity: 0;
+  transition: opacity 140ms ease-out, transform 140ms ease-out;
 }
 
-.popup-title{
-  margin: 0 0 6px;
-  font-size: 18px;
+/* when the new image is ready */
+.popup-photo.is-ready {
+  opacity: 1;
 }
 
-.popup-caption{
-  margin: 0;
+.popup-loading {
+  display: none;
+  margin: 10px 0 0;
+  font-size: 13px;
   opacity: 0.8;
-  font-size: 14px;
+}
+
+.popup-content.is-loading .popup-loading {
+  display: block;
 }
 
 .zoom-wrapper{

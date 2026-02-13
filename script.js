@@ -16,9 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
 const overlay = document.getElementById("popupOverlay");
 const closeBtn = document.getElementById("closePopupBtn");
 
-const popupTitle = document.getElementById("popupTitle");
-const popupCaption = document.getElementById("popupCaption");
-
 const zoomWrapper = document.getElementById("zoomWrapper");
 const zoomImage = document.getElementById("zoomImage");
 
@@ -35,25 +32,66 @@ function resetZoom() {
   zoomImage.style.transformOrigin = "50% 50%";
 }
 
-function openPopup({ imgSrc, imgAlt }) {
-  // Set content
+async function openPopup({ imgSrc, imgAlt }) {
+  // Reset zoom + hide image immediately
+  resetZoom();
+  zoomImage.classList.remove("is-ready");
 
-  zoomImage.src = imgSrc;
+  // Optional loading UI
+  popupContent.classList.add("is-loading");
+  if (popupLoading) popupLoading.textContent = "Loading…";
+
+  // IMPORTANT: clear old image to prevent “flash of previous”
+  zoomImage.removeAttribute("src");
   zoomImage.alt = imgAlt || "";
 
-  resetZoom();
-
+  // Open the modal now (overlay + box appear instantly)
   overlay.classList.add("active");
   overlay.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+
+  // Preload + decode the next image before swapping it in
+  const preloaded = new Image();
+  preloaded.src = imgSrc;
+
+  try {
+    // Wait for image data to load
+    await new Promise((resolve, reject) => {
+      preloaded.onload = resolve;
+      preloaded.onerror = reject;
+    });
+
+    // Wait for decode (prevents paint jank in many browsers)
+    if (preloaded.decode) {
+      await preloaded.decode();
+    }
+
+    // Now swap in the correct image
+    zoomImage.src = imgSrc;
+
+    // Next frame: fade it in
+    requestAnimationFrame(() => zoomImage.classList.add("is-ready"));
+  } catch (err) {
+    // Fallback: show broken state gracefully
+    if (popupLoading) popupLoading.textContent = "Failed to load image.";
+    console.warn("Popup image failed to load:", err);
+  } finally {
+    popupContent.classList.remove("is-loading");
+  }
 }
 
 function closePopup() {
   overlay.classList.remove("active");
   overlay.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+
   resetZoom();
+
+  // Prevent old image flash next time
+  zoomImage.classList.remove("is-ready");
+  zoomImage.removeAttribute("src");
 }
+
 
 // Event delegation: supports unlimited triggers
 document.addEventListener("click", (e) => {
