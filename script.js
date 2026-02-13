@@ -74,6 +74,7 @@ async function openPopup({ imgSrc = "", imgAlt = "" } = {}) {
 
     // Next frame: fade it in
     requestAnimationFrame(() => zoomImage.classList.add("is-ready"));
+    console.log(payload, "pay load")
   } catch (err) {
     // Fallback: show broken state gracefully
     if (popupLoading) popupLoading.textContent = "Failed to load image.";
@@ -108,7 +109,7 @@ document.addEventListener("click", (e) => {
     imgAlt: trigger.dataset.popupAlt,
   };
 
-  console.log(payload, "pay load")
+
 
   // Open on next frame to avoid “click-through” issues
   requestAnimationFrame(() => openPopup(payload));
