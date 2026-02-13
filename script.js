@@ -23,10 +23,12 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function openPopup() {
-  overlay.classList.add("active");
-  overlay.setAttribute("aria-hidden", "false");
-  // optional: prevent page scroll behind modal
-  document.body.style.overflow = "hidden";
+  // Delay adding the class until after the current click finishes
+  requestAnimationFrame(() => {
+    overlay.classList.add("active");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  });
 }
 
 function closePopup() {
@@ -36,29 +38,25 @@ function closePopup() {
 }
 
 openBtn.addEventListener("click", (e) => {
-  e.preventDefault(); // safe even if it's a button; crucial if you use <a>
+  e.preventDefault();
+  e.stopPropagation();   // prevents the “same click” from closing it
   openPopup();
 });
 
-closeBtn.addEventListener("click", closePopup);
+closeBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  closePopup();
+});
 
-// Click outside popup content closes it
+// Click outside content closes it
 overlay.addEventListener("click", (e) => {
   if (e.target === overlay) closePopup();
 });
 
-// ESC key closes
+// ESC closes
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && overlay.classList.contains("active")) {
-    closePopup();
-  }
+  if (e.key === "Escape" && overlay.classList.contains("active")) closePopup();
 });
-
-
-// function togglePopup() {
-//   const overlay = document.getElementById('popupOverlay');
-//   overlay.classList.toggle('active');
-// }
 
 
 // Enhanced Theme Toggle with Smooth Transitions
