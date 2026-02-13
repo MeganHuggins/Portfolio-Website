@@ -1364,17 +1364,16 @@ section {
   align-items: center;
   padding: 24px;
 
-  background-color: rgba(0, 0, 0, 0.55);
+  background: rgba(0,0,0,0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
-  /* instead of display:none */
+  /* hidden by default */
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 
   transition: opacity 140ms ease, visibility 140ms ease;
-  will-change: opacity;
 }
 
 .popup-overlay.active {
