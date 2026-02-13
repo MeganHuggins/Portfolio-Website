@@ -1403,12 +1403,27 @@ section {
 }
 
 /* Image */
+.zoom-wrapper {
+  overflow: hidden;      /* hides overflow when image scales */
+  border-radius: 12px;
+  cursor: zoom-in;
+}
+
 .popup-photo {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 12px;
+
+  transition: transform 0.15s ease-out;
+  transform-origin: center center;
 }
+
+/* .popup-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+} */
 
 /* Close button */
 .popup-btn {

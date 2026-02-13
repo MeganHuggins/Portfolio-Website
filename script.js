@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
 const overlay = document.getElementById("popupOverlay");
 const openBtn = document.getElementById("openPopupBtn");
 const closeBtn = document.getElementById("closePopupBtn");
+const zoomImage = document.getElementById("zoomImage");
+const zoomWrapper = document.querySelector(".zoom-wrapper");
+
+let scaleAmount = 2; // how strong the zoom is
 
 
 function openPopup() {
@@ -48,6 +52,21 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && overlay.classList.contains("active")) {
     closePopup();
   }
+});
+
+zoomWrapper.addEventListener("mousemove", (e) => {
+  const rect = zoomWrapper.getBoundingClientRect();
+
+  // Cursor position inside element (0–1 range)
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+
+  zoomImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+  zoomImage.style.transform = `scale(${scaleAmount})`;
+});
+
+zoomWrapper.addEventListener("mouseleave", () => {
+  zoomImage.style.transform = "scale(1)";
 });
 
 
