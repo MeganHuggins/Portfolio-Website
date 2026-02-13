@@ -35,28 +35,91 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Config ---
   const SCALE = 2;
-  let isZoomedMobile = false;
+let isZoomedMobile = false;
 
-  const canHover = window.matchMedia("(hover: hover)").matches;
-  const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+const canHover = window.matchMedia("(hover: hover)").matches;
+const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
-  function resetZoom() {
-    isZoomedMobile = false;
-    zoomWrapper.classList.remove("is-zoomed");
-    zoomImage.style.transform = "scale(1)";
-    zoomImage.style.transformOrigin = "50% 50%";
-  }
+function resetZoom() {
+  isZoomedMobile = false;
+  zoomWrapper.classList.remove("is-zoomed");
+  // (optional if you add the cursor polish class)
+  zoomWrapper.classList.remove("is-armed");
+  zoomImage.style.transform = "scale(1)";
+  zoomImage.style.transformOrigin = "50% 50%";
+}
 
-  function setOriginFromEvent(e) {
-    const rect = zoomWrapper.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+function setOriginFromEvent(e) {
+  const rect = zoomWrapper.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    const x = (clientX - rect.left) / rect.width;
-    const y = (clientY - rect.top) / rect.height;
+  const x = (clientX - rect.left) / rect.width;
+  const y = (clientY - rect.top) / rect.height;
 
-    zoomImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
-  }
+  zoomImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+}
+
+/* ✅ ADD THIS: Desktop “arm” zoom so it only starts after the mouse moves */
+if (canHover && !isCoarsePointer) {
+  let armed = false;
+  let startX = 0;
+  let startY = 0;
+  const MOVE_THRESHOLD = 6; // px (adjust 4–10)
+
+  zoomWrapper.addEventListener("mouseenter", (e) => {
+    if (!overlay.classList.contains("active")) return;
+
+    armed = true;
+    startX = e.clientX;
+    startY = e.clientY;
+
+    // optional cursor polish (requires CSS for .is-armed)
+    zoomWrapper.classList.add("is-armed");
+
+    // ensure full image shows first
+    resetZoom();
+  });
+
+  zoomWrapper.addEventListener("mousemove", (e) => {
+    if (!overlay.classList.contains("active")) return;
+    if (!armed) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    // Only begin zoom after a small intentional move
+    if (Math.hypot(dx, dy) < MOVE_THRESHOLD) return;
+
+    zoomWrapper.classList.remove("is-armed");
+    setOriginFromEvent(e);
+    zoomImage.style.transform = `scale(${SCALE})`;
+    zoomWrapper.classList.add("is-zoomed");
+  });
+
+  zoomWrapper.addEventListener("mouseleave", () => {
+    armed = false;
+    resetZoom();
+  });
+}
+
+/* ✅ KEEP / ADD THIS: Mobile tap-to-toggle zoom */
+if (!canHover || isCoarsePointer) {
+  zoomWrapper.addEventListener("click", (e) => {
+    if (!overlay.classList.contains("active")) return;
+
+    isZoomedMobile = !isZoomedMobile;
+
+    if (isZoomedMobile) {
+      setOriginFromEvent(e);
+      zoomImage.style.transform = `scale(${SCALE})`;
+      zoomWrapper.classList.add("is-zoomed");
+    } else {
+      resetZoom();
+    }
+  });
+}
+
 
   async function openPopup(payload = {}) {
     const imgSrc = payload.imgSrc || "";
