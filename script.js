@@ -106,17 +106,28 @@ function closePopup() {
 
 // Event delegation: supports unlimited triggers
 document.addEventListener("click", (e) => {
-
   const trigger = e.target.closest(".popup-trigger");
   if (!trigger) return;
 
   e.preventDefault();
   e.stopPropagation();
 
+  const srcEl = trigger.querySelector(".popup-src");
   const payload = {
-    imgSrc: trigger.dataset.popupImg,
-    imgAlt: trigger.dataset.popupAlt,
+    imgSrc: srcEl ? srcEl.getAttribute("src") : "",
+    imgAlt: trigger.dataset.popupAlt || "",
   };
+
+  if (!payload.imgSrc) {
+    console.warn("No .popup-src found inside trigger:", trigger);
+    return;
+  }
+
+  const resolved = new URL(payload.imgSrc, document.baseURI).href;
+  console.log("Popup img src:", payload.imgSrc, "→", resolved);
+
+  requestAnimationFrame(() => openPopup(payload));
+});
 
 
 
