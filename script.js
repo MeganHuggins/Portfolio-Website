@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initSmoothScrolling();
     initCreativeAnimations();
-    openPopup();
-    closePopup();
+    // openPopup();
+    // closePopup();
 });
 
 // Debug Code
