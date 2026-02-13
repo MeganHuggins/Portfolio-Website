@@ -11,28 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initCreativeAnimations();
 });
 
-// Debug Code
-document.addEventListener("click", (e) => {
-  const trigger = e.target.closest(".popup-trigger");
-  if (!trigger) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const payload = {
-    title: trigger.dataset.popupTitle,
-    caption: trigger.dataset.popupCaption,
-    imgSrc: trigger.dataset.popupImg,
-    imgAlt: trigger.dataset.popupAlt,
-  };
-
-  console.log("Opening popup with:", payload);
-
-  requestAnimationFrame(() => openPopup(payload));
-});
-
-// Popup
-
 const overlay = document.getElementById("popupOverlay");
 const closeBtn = document.getElementById("closePopupBtn");
 
@@ -55,10 +33,7 @@ function resetZoom() {
   zoomImage.style.transformOrigin = "50% 50%";
 }
 
-async function openPopup({
-  imgSrc = "",
-  imgAlt = ""
-} = {}) {
+async function openPopup({ imgSrc = "", imgAlt = "" } = {}) {
   // Reset zoom + hide image immediately
   resetZoom();
   zoomImage.classList.remove("is-ready");
@@ -117,7 +92,6 @@ function closePopup() {
   zoomImage.classList.remove("is-ready");
   zoomImage.removeAttribute("src");
 }
-
 
 // Event delegation: supports unlimited triggers
 document.addEventListener("click", (e) => {
