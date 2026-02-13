@@ -243,7 +243,7 @@
     <section id="projects" class="projects">
             
          <!-- The Popup Container -->
-        <div id="popupOverlay" class="popup-overlay" aria-hidden="true">
+        <!-- <div id="popupOverlay" class="popup-overlay" aria-hidden="true">
             <div class="popup-content" role="dialog" aria-modal="true" aria-label="Wireframe preview">
                 <button class="popup-btn" id="closePopupBtn" type="button" aria-label="Close popup">×</button>
                 <div class="zoom-wrapper" id="zoomWrapper">
@@ -255,6 +255,21 @@
                         loading="eager"
                         decoding="async"
                     />
+                </div>
+            </div>
+        </div> -->
+
+        <div id="popupOverlay" class="popup-overlay" aria-hidden="true">
+            <div class="popup-content" role="dialog" aria-modal="true" aria-label="Project preview">
+                <button class="popup-btn" id="closePopupBtn" type="button" aria-label="Close popup">×</button>
+
+                <div class="popup-header">
+                <h3 id="popupTitle" class="popup-title"></h3>
+                <p id="popupCaption" class="popup-caption"></p>
+                </div>
+
+                <div class="zoom-wrapper" id="zoomWrapper">
+                <img id="zoomImage" class="popup-photo" alt="" />
                 </div>
             </div>
         </div>
@@ -282,7 +297,16 @@
                                 <a href="#" class="project-link" title="View Code">
                                     <i class="fab fa-github"></i>
                                 </a>
-                                <a href="#" class="project-link" id="openPopupBtn" title="Full Design">
+                                <!-- <a href="#" class="project-link" id="openPopupBtn" title="Full Design">
+                                    <i  class="fas fa-external-link-alt"></i>
+                                </a> -->
+                                <a  href="#" class="project-link popup-trigger"
+                                    title="Full Design"
+                                    data-popup-title="Meow Bark Wireframe"
+                                    data-popup-img="images/meow-bark.png"
+                                    data-popup-alt="Meow Bark full wireframe"
+                                    data-popup-caption="Desktop + mobile wireframe — full flow."
+                                >
                                     <i  class="fas fa-external-link-alt"></i>
                                 </a>
                             </div>
@@ -311,7 +335,17 @@
                                 <a href="#" class="project-link" title="View Code">
                                     <i class="fab fa-github"></i>
                                 </a>
-                                <a href="#" class="project-link" title="Live Demo">
+                                <!-- <a href="#" class="project-link" title="Live Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a> -->
+                                <a 
+                                href="#" class="project-link popup-trigger"
+                                title="Full Design"
+                                data-popup-title="Esteem Wirefram"
+                                data-popup-img="images/esteem.png"
+                                data-popup-alt="Esteem full wireframe"
+                                data-popup-caption="Checkout flow, edge cases, and states."
+                                >
                                     <i class="fas fa-external-link-alt"></i>
                                 </a>
                             </div>

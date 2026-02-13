@@ -13,19 +13,41 @@ document.addEventListener('DOMContentLoaded', function() {
     closePopup();
 });
 
-const overlay = document.getElementById("popupOverlay");
-const openBtn = document.getElementById("openPopupBtn");
+cconst overlay = document.getElementById("popupOverlay");
 const closeBtn = document.getElementById("closePopupBtn");
+
+const popupTitle = document.getElementById("popupTitle");
+const popupCaption = document.getElementById("popupCaption");
+
 const zoomWrapper = document.getElementById("zoomWrapper");
 const zoomImage = document.getElementById("zoomImage");
 
-let scaleAmount = 2; // how strong the zoom is
+const SCALE = 2;
+let isZoomedMobile = false;
 
+const canHover = window.matchMedia("(hover: hover)").matches;
+const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
-function openPopup() {
+function resetZoom() {
+  isZoomedMobile = false;
+  zoomWrapper.classList.remove("is-zoomed");
+  zoomImage.style.transform = "scale(1)";
+  zoomImage.style.transformOrigin = "50% 50%";
+}
+
+function openPopup({ title, caption, imgSrc, imgAlt }) {
+  // Set content
+  popupTitle.textContent = title || "";
+  popupCaption.textContent = caption || "";
+  popupCaption.style.display = caption ? "block" : "none";
+
+  zoomImage.src = imgSrc;
+  zoomImage.alt = imgAlt || "";
+
+  resetZoom();
+
   overlay.classList.add("active");
   overlay.setAttribute("aria-hidden", "false");
-  // optional: prevent page scroll behind modal
   document.body.style.overflow = "hidden";
 }
 
@@ -33,39 +55,45 @@ function closePopup() {
   overlay.classList.remove("active");
   overlay.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+  resetZoom();
 }
 
-openBtn.addEventListener("click", (e) => {
-  e.preventDefault(); // safe even if it's a button; crucial if you use <a>
-  openPopup();
+// Event delegation: supports unlimited triggers
+document.addEventListener("click", (e) => {
+  const trigger = e.target.closest(".popup-trigger");
+  if (!trigger) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const payload = {
+    title: trigger.dataset.popupTitle,
+    caption: trigger.dataset.popupCaption,
+    imgSrc: trigger.dataset.popupImg,
+    imgAlt: trigger.dataset.popupAlt,
+  };
+
+  // Open on next frame to avoid “click-through” issues
+  requestAnimationFrame(() => openPopup(payload));
 });
 
-closeBtn.addEventListener("click", closePopup);
+closeBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  closePopup();
+});
 
-// Click outside popup content closes it
+// Click outside popup-content closes
 overlay.addEventListener("click", (e) => {
   if (e.target === overlay) closePopup();
 });
 
-// ESC key closes
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && overlay.classList.contains("active")) {
-    closePopup();
-  }
+  if (e.key === "Escape" && overlay.classList.contains("active")) closePopup();
 });
 
-const SCALE = 2; // change to 1.6–2.5 depending on your image detail
-let isZoomedMobile = false;
-
-// Detect interaction capabilities
-const canHover = window.matchMedia("(hover: hover)").matches;
-const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-
-// Helper to set zoom origin from an event
+// --- Zoom behavior ---
 function setOriginFromEvent(e) {
   const rect = zoomWrapper.getBoundingClientRect();
-
-  // Support mouse + touch
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
@@ -75,42 +103,33 @@ function setOriginFromEvent(e) {
   zoomImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
 }
 
-// =======================
-// Desktop: hover-to-zoom
-// =======================
+// Desktop: hover zoom
 if (canHover && !isCoarsePointer) {
   zoomWrapper.addEventListener("mousemove", (e) => {
+    if (!overlay.classList.contains("active")) return;
     setOriginFromEvent(e);
     zoomImage.style.transform = `scale(${SCALE})`;
     zoomWrapper.classList.add("is-zoomed");
   });
 
   zoomWrapper.addEventListener("mouseleave", () => {
-    zoomImage.style.transform = "scale(1)";
-    zoomWrapper.classList.remove("is-zoomed");
+    resetZoom();
   });
 }
 
-// =======================
-// Mobile: tap-to-toggle
-// =======================
+// Mobile: tap toggle zoom
 if (!canHover || isCoarsePointer) {
   zoomWrapper.addEventListener("click", (e) => {
-    // Toggle zoom state
+    if (!overlay.classList.contains("active")) return;
+
     isZoomedMobile = !isZoomedMobile;
 
     if (isZoomedMobile) {
       setOriginFromEvent(e);
       zoomImage.style.transform = `scale(${SCALE})`;
       zoomWrapper.classList.add("is-zoomed");
-
-      // Optional: prevent background page from scrolling while zoomed
-      // (only if you want; comment out if annoying)
-      // document.body.style.overflow = "hidden";
     } else {
-      zoomImage.style.transform = "scale(1)";
-      zoomWrapper.classList.remove("is-zoomed");
-      // document.body.style.overflow = "";
+      resetZoom();
     }
   });
 }
