@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initCreativeAnimations();
 });
 
+console.count("popup script loaded");
+
 const overlay = document.getElementById("popupOverlay");
 const closeBtn = document.getElementById("closePopupBtn");
 
@@ -35,18 +37,14 @@ function resetZoom() {
 }
 
 async function openPopup(payload = {}) {
-  const {
-    imgSrc = "",
-    imgAlt = "",
-  } = payload;
+  const imgSrc = payload.imgSrc || "";
+  const imgAlt = payload.imgAlt || "";
 
   if (!imgSrc) {
-    console.warn("openPopup called without imgSrc. Payload was:", payload);
+    console.warn("Missing data-popup-img on trigger:", payload);
     return;
   }
 
-    console.log(payload, "pay load")
-    console.log(imgSrc, "IMAGE")
   // Reset zoom + hide image immediately
   resetZoom();
   zoomImage.classList.remove("is-ready");
