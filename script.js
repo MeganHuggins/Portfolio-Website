@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollEffects();
     initTypingAnimation();
     initSkillBars();
-    initContactForm();
+    // initContactForm();
     initSmoothScrolling();
     initCreativeAnimations();
 });
@@ -107,6 +107,8 @@ document.addEventListener("click", (e) => {
     imgSrc: trigger.dataset.popupImg,
     imgAlt: trigger.dataset.popupAlt,
   };
+
+  console.log(payload, "pay load")
 
   // Open on next frame to avoid “click-through” issues
   requestAnimationFrame(() => openPopup(payload));
