@@ -16,6 +16,7 @@ const closeBtn = document.getElementById("closePopupBtn");
 
 const zoomWrapper = document.getElementById("zoomWrapper");
 const zoomImage = document.getElementById("zoomImage");
+console.log(zoomImage, "zoomImage")
 
 const popupContent = document.querySelector(".popup-content");
 const popupLoading = document.getElementById("popupLoading");
@@ -34,6 +35,7 @@ function resetZoom() {
 }
 
 async function openPopup({ imgSrc = "", imgAlt = "" } = {}) {
+    console.log(imgSrc, "IMAGE")
   // Reset zoom + hide image immediately
   resetZoom();
   zoomImage.classList.remove("is-ready");
