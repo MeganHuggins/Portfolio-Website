@@ -104,8 +104,6 @@ document.addEventListener("click", (e) => {
   e.stopPropagation();
 
   const payload = {
-    title: trigger.dataset.popupTitle,
-    caption: trigger.dataset.popupCaption,
     imgSrc: trigger.dataset.popupImg,
     imgAlt: trigger.dataset.popupAlt,
   };
