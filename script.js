@@ -106,6 +106,9 @@ function closePopup() {
 
 // Event delegation: supports unlimited triggers
 document.addEventListener("click", (e) => {
+//   const resolved = new URL(payload.imgSrc, document.baseURI).href;
+//   console.log("Popup img src:", payload.imgSrc, "→", resolved);
+
   const trigger = e.target.closest(".popup-trigger");
   if (!trigger) return;
 
