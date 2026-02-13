@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initSmoothScrolling();
     initCreativeAnimations();
-    // openPopup();
-    // closePopup();
 });
 
 // Debug Code
@@ -57,7 +55,10 @@ function resetZoom() {
   zoomImage.style.transformOrigin = "50% 50%";
 }
 
-async function openPopup({ imgSrc, imgAlt }) {
+async function openPopup({
+  imgSrc = "",
+  imgAlt = ""
+} = {}) {
   // Reset zoom + hide image immediately
   resetZoom();
   zoomImage.classList.remove("is-ready");
