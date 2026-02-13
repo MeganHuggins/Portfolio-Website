@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const carouselControls = document.getElementById("carouselControls");
   const carouselPrev = document.getElementById("carouselPrev");
   const carouselNext = document.getElementById("carouselNext");
-  const carouselCount = document.getElementById("carouselCount");
   const carouselDots = document.getElementById("carouselDots");
 
   // --- Guard: if any required element is missing, stop and log clearly ---
@@ -42,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     carouselControls,
     carouselPrev,
     carouselNext,
-    carouselCount,
     carouselDots,
   };
 
@@ -111,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCarouselUI() {
     const total = carouselImages.length || 1;
 
-    carouselCount.textContent = `${carouselIndex + 1} / ${total}`;
     carouselPrev.disabled = carouselIndex === 0;
     carouselNext.disabled = carouselIndex === total - 1;
 
@@ -219,7 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
     carouselIndex = 0;
     showCarouselControls(false);
     carouselDots.innerHTML = "";
-    carouselCount.textContent = "1 / 1";
   }
 
   // --- Carousel button wiring ---
