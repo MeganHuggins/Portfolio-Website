@@ -35,11 +35,8 @@ function resetZoom() {
   zoomImage.style.transformOrigin = "50% 50%";
 }
 
-function openPopup({ title, caption, imgSrc, imgAlt }) {
+function openPopup({ imgSrc, imgAlt }) {
   // Set content
-  popupTitle.textContent = title || "";
-  popupCaption.textContent = caption || "";
-  popupCaption.style.display = caption ? "block" : "none";
 
   zoomImage.src = imgSrc;
   zoomImage.alt = imgAlt || "";
