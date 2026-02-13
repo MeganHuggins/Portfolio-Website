@@ -13,6 +13,28 @@ document.addEventListener('DOMContentLoaded', function() {
     closePopup();
 });
 
+// Debug Code
+document.addEventListener("click", (e) => {
+  const trigger = e.target.closest(".popup-trigger");
+  if (!trigger) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const payload = {
+    title: trigger.dataset.popupTitle,
+    caption: trigger.dataset.popupCaption,
+    imgSrc: trigger.dataset.popupImg,
+    imgAlt: trigger.dataset.popupAlt,
+  };
+
+  console.log("Opening popup with:", payload);
+
+  requestAnimationFrame(() => openPopup(payload));
+});
+
+// Popup
+
 const overlay = document.getElementById("popupOverlay");
 const closeBtn = document.getElementById("closePopupBtn");
 
