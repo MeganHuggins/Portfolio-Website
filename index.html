@@ -245,19 +245,23 @@
     <!-- Projects Section -->
     <section id="projects" class="projects">
             
-            <!-- <button onclick="togglePopup()">Open Profile</button> -->
 
-            <!-- The Popup Container -->
-        <div id="popupOverlay" class="popup-overlay" onclick="togglePopup()">
+        <!-- The Popup Container -->
+         <!-- The Popup Container -->
+        <div id="popupOverlay" class="popup-overlay" aria-hidden="true">
+            <div class="popup-content" role="dialog" aria-modal="true" aria-label="Wireframe preview">
+                <button class="popup-btn" id="closePopupBtn" type="button" aria-label="Close popup">×</button>
+
+                <img src="images/meow-bark.png" alt="Wireframe full design" class="popup-photo">
+            </div>
+        </div>
+        <!-- <div id="popupOverlay" class="popup-overlay" onclick="togglePopup()">
             <div class="popup-content" onclick="event.stopPropagation()">
-                
-                <!-- The Trigger Button -->
                 <button class="popup-btn" onclick="togglePopup()">X</button>
-                <!-- Your Photo -->
                 <img src="images/meow-bark.png" alt="Profile" class="popup-photo">
                
             </div>
-        </div>
+        </div> -->
 
         <div class="container">
             <div class="section-header">
