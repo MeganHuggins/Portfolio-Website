@@ -34,7 +34,18 @@ function resetZoom() {
   zoomImage.style.transformOrigin = "50% 50%";
 }
 
-async function openPopup({ imgSrc = "", imgAlt = "" } = {}) {
+async function openPopup(payload = {}) {
+  const {
+    imgSrc = "",
+    imgAlt = "",
+  } = payload;
+
+  if (!imgSrc) {
+    console.warn("openPopup called without imgSrc. Payload was:", payload);
+    return;
+  }
+
+    console.log(payload, "pay load")
     console.log(imgSrc, "IMAGE")
   // Reset zoom + hide image immediately
   resetZoom();
@@ -74,7 +85,6 @@ async function openPopup({ imgSrc = "", imgAlt = "" } = {}) {
 
     // Next frame: fade it in
     requestAnimationFrame(() => zoomImage.classList.add("is-ready"));
-    console.log(payload, "pay load")
   } catch (err) {
     // Fallback: show broken state gracefully
     if (popupLoading) popupLoading.textContent = "Failed to load image.";
