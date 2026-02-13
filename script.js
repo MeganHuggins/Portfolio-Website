@@ -17,18 +17,12 @@ const overlay = document.getElementById("popupOverlay");
 const openBtn = document.getElementById("openPopupBtn");
 const closeBtn = document.getElementById("closePopupBtn");
 
-window.addEventListener("DOMContentLoaded", () => {
-  const img = new Image();
-  img.src = "images/meow-bark.png";
-});
 
 function openPopup() {
-  // Delay adding the class until after the current click finishes
-  requestAnimationFrame(() => {
-    overlay.classList.add("active");
-    overlay.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  });
+  overlay.classList.add("active");
+  overlay.setAttribute("aria-hidden", "false");
+  // optional: prevent page scroll behind modal
+  document.body.style.overflow = "hidden";
 }
 
 function closePopup() {
@@ -38,24 +32,22 @@ function closePopup() {
 }
 
 openBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();   // prevents the “same click” from closing it
+  e.preventDefault(); // safe even if it's a button; crucial if you use <a>
   openPopup();
 });
 
-closeBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  closePopup();
-});
+closeBtn.addEventListener("click", closePopup);
 
-// Click outside content closes it
+// Click outside popup content closes it
 overlay.addEventListener("click", (e) => {
   if (e.target === overlay) closePopup();
 });
 
-// ESC closes
+// ESC key closes
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && overlay.classList.contains("active")) closePopup();
+  if (e.key === "Escape" && overlay.classList.contains("active")) {
+    closePopup();
+  }
 });
 
 
