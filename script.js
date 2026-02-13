@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     closePopup();
 });
 
-cconst overlay = document.getElementById("popupOverlay");
+const overlay = document.getElementById("popupOverlay");
 const closeBtn = document.getElementById("closePopupBtn");
 
 const popupTitle = document.getElementById("popupTitle");
