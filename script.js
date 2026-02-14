@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
 console.count("popup script loaded");
 
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Grab DOM elements (safe after DOMContentLoaded) ---
   const overlay = document.getElementById("popupOverlay");
   const closeBtn = document.getElementById("closePopupBtn");
 
@@ -24,24 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const popupContent = document.querySelector(".popup-content");
   const popupLoading = document.getElementById("popupLoading");
 
-  // --- Carousel elements (add these to your popup HTML) ---
   const carouselControls = document.getElementById("carouselControls");
   const carouselPrev = document.getElementById("carouselPrev");
   const carouselNext = document.getElementById("carouselNext");
   const carouselDots = document.getElementById("carouselDots");
 
-  // --- Guard: if any required element is missing, stop and log clearly ---
   const required = {
-    overlay,
-    closeBtn,
-    zoomWrapper,
-    zoomImage,
-    popupContent,
-    popupLoading,
-    carouselControls,
-    carouselPrev,
-    carouselNext,
-    carouselDots,
+    overlay, closeBtn, zoomWrapper, zoomImage, popupContent, popupLoading,
+    carouselControls, carouselPrev, carouselNext, carouselDots
   };
 
   const missing = Object.entries(required)
@@ -53,14 +42,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // --- Config ---
   const SCALE = 2;
   let isZoomedMobile = false;
 
   const canHover = window.matchMedia("(hover: hover)").matches;
   const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
-  // --- Carousel state ---
   let carouselImages = [];
   let carouselIndex = 0;
 
@@ -95,7 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderDots() {
     carouselDots.innerHTML = "";
-
     carouselImages.forEach((_, i) => {
       const dot = document.createElement("button");
       dot.type = "button";
@@ -108,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateCarouselUI() {
     const total = carouselImages.length || 1;
+    // count is hidden in CSS, but safe to keep updated
 
     carouselPrev.disabled = carouselIndex === 0;
     carouselNext.disabled = carouselIndex === total - 1;
@@ -120,17 +107,14 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadIntoPopupImage(imgSrc, imgAlt = "") {
     if (!imgSrc) return;
 
-    // Reset zoom + prep loading UI
     resetZoom();
     zoomImage.classList.remove("is-ready");
     popupContent.classList.add("is-loading");
     popupLoading.textContent = "Loading…";
 
-    // Clear old image so it can't flash
     zoomImage.removeAttribute("src");
     zoomImage.alt = imgAlt;
 
-    // Preload next image BEFORE showing it
     const preloaded = new Image();
     preloaded.src = imgSrc;
 
@@ -141,11 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (preloaded.decode) {
-        try {
-          await preloaded.decode();
-        } catch (e) {
-          console.warn("decode() failed, continuing:", e);
-        }
+        try { await preloaded.decode(); } catch (e) {}
       }
 
       zoomImage.src = imgSrc;
@@ -169,12 +149,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const carousel = Array.isArray(payload.carousel) ? payload.carousel : [];
     const isCarousel = carousel.length > 0;
 
-    // Open modal immediately (feels responsive)
     overlay.classList.add("active");
     overlay.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
 
-    // Reset carousel each time
+    // ✅ toggle layout mode class
+    popupContent.classList.toggle("is-carousel", isCarousel);
+
+    // reset carousel every open
     carouselImages = [];
     carouselIndex = 0;
     showCarouselControls(false);
@@ -207,18 +189,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resetZoom();
 
-    // Clear image to prevent flash on next open
     zoomImage.classList.remove("is-ready");
     zoomImage.removeAttribute("src");
 
-    // Reset carousel UI/state
     carouselImages = [];
     carouselIndex = 0;
     showCarouselControls(false);
     carouselDots.innerHTML = "";
+
+    // ✅ reset layout mode
+    popupContent.classList.remove("is-carousel");
   }
 
-  // --- Carousel button wiring ---
+  // carousel buttons
   carouselPrev.addEventListener("click", (e) => {
     e.stopPropagation();
     if (carouselIndex > 0) goToSlide(carouselIndex - 1);
@@ -231,18 +214,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Optional: arrow key navigation for carousel
+  // optional arrow keys for carousel
   document.addEventListener("keydown", (e) => {
     if (!overlay.classList.contains("active")) return;
     if (!carouselImages.length) return;
 
     if (e.key === "ArrowLeft" && carouselIndex > 0) goToSlide(carouselIndex - 1);
-    if (e.key === "ArrowRight" && carouselIndex < carouselImages.length - 1) {
-      goToSlide(carouselIndex + 1);
-    }
+    if (e.key === "ArrowRight" && carouselIndex < carouselImages.length - 1) goToSlide(carouselIndex + 1);
   });
 
-  // --- Trigger click (event delegation) ---
+  // trigger click
   document.addEventListener("click", (e) => {
     const trigger = e.target.closest(".popup-trigger");
     if (!trigger) return;
@@ -252,36 +233,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const imgAlt = trigger.dataset.popupAlt || "";
 
-    // ✅ Carousel trigger: data-carousel="a.png|b.png|c.png"
     const carouselRaw = trigger.dataset.carousel;
     if (carouselRaw) {
-      const carousel = carouselRaw
-        .split("|")
-        .map((s) => s.trim())
-        .filter(Boolean);
-
-      if (!carousel.length) {
-        console.warn("data-carousel present but empty:", trigger);
-        return;
-      }
+      const carousel = carouselRaw.split("|").map(s => s.trim()).filter(Boolean);
+      if (!carousel.length) return;
 
       requestAnimationFrame(() => openPopup({ carousel, imgAlt }));
       return;
     }
 
-    // ✅ Single-image trigger: hidden <img class="popup-src" src="...">
     const srcEl = trigger.querySelector(".popup-src");
     const imgSrc = srcEl?.getAttribute("src") || "";
-
-    if (!imgSrc) {
-      console.warn("Popup trigger missing .popup-src <img src='...'>:", trigger);
-      return;
-    }
+    if (!imgSrc) return;
 
     requestAnimationFrame(() => openPopup({ imgSrc, imgAlt }));
   });
 
-  // --- Close behavior ---
+  // close behaviors
   closeBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     closePopup();
@@ -296,7 +264,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- Zoom behavior ---
-  // Desktop: "armed" zoom so it doesn't auto-zoom on open
+  // ✅ OPTIONAL: disable desktop hover zoom in carousel mode (recommended for slides)
+  function zoomAllowed() {
+    return overlay.classList.contains("active") && !popupContent.classList.contains("is-carousel");
+    // If you WANT zoom in carousel too, change to:
+    // return overlay.classList.contains("active");
+  }
+
   if (canHover && !isCoarsePointer) {
     let armed = false;
     let startX = 0;
@@ -304,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const MOVE_THRESHOLD = 6;
 
     zoomWrapper.addEventListener("mouseenter", (e) => {
-      if (!overlay.classList.contains("active")) return;
+      if (!zoomAllowed()) return;
 
       armed = true;
       startX = e.clientX;
@@ -315,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     zoomWrapper.addEventListener("mousemove", (e) => {
-      if (!overlay.classList.contains("active")) return;
+      if (!zoomAllowed()) return;
       if (!armed) return;
 
       const dx = e.clientX - startX;
@@ -333,10 +307,10 @@ document.addEventListener("DOMContentLoaded", () => {
       resetZoom();
     });
   } else {
-    // Mobile: tap-to-toggle zoom
     zoomWrapper.addEventListener("click", (e) => {
       if (!overlay.classList.contains("active")) return;
 
+      // On mobile, allow zoom even in carousel (feels okay)
       isZoomedMobile = !isZoomedMobile;
 
       if (isZoomedMobile) {
